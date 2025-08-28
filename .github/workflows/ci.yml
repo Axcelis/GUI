@@ -44,7 +44,7 @@ jobs:
       - name: Publish GUI
         run: dotnet publish ./BasicGUI/BasicGUI.csproj -c Release -o ./release
       - name: Upload Release Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gui-release
           path: ./release
