@@ -47,6 +47,9 @@ jobs:
           dotnet-version: '9.0.x'
       - name: Publish GUI
         run: dotnet publish ./BasicGUI/BasicGUI.csproj -c Release -o ./release
+      - name: Zip GUI Release
+        run: |
+          powershell Compress-Archive -Path ./release/* -DestinationPath ./release/BasicGUI.zip
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -63,6 +66,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release/BasicGUI.exe
-          asset_name: BasicGUI.exe
-          asset_content_type: application/octet-stream
+          asset_path: ./release/BasicGUI.zip
+          asset_name: BasicGUI.zip
+          asset_content_type: application/zip
