@@ -43,8 +43,22 @@ jobs:
           dotnet-version: '9.0.x'
       - name: Publish GUI
         run: dotnet publish ./BasicGUI/BasicGUI.csproj -c Release -o ./release
-      - name: Upload Release Artifact
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: gui-release
-          path: ./release
+          tag_name: v${{ github.run_number }}
+          release_name: "Release v${{ github.run_number }}"
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./release/BasicGUI.exe
+          asset_name: BasicGUI.exe
+          asset_content_type: application/octet-stream
