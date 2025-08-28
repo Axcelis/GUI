@@ -1,0 +1,50 @@
+name: Build, Test, and Release GUI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Build GUI and Tests
+        run: |
+          dotnet build ./BasicGUI/BasicGUI.csproj
+          dotnet build ./BasicGUITests/BasicGUITests.csproj
+
+  test:
+    runs-on: windows-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Run Unit Tests
+        run: dotnet test ./BasicGUITests/BasicGUITests.csproj
+
+  release:
+    runs-on: windows-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Publish GUI
+        run: dotnet publish ./BasicGUI/BasicGUI.csproj -c Release -o ./release
+      - name: Upload Release Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: gui-release
+          path: ./release

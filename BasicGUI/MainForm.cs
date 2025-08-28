@@ -10,9 +10,9 @@ public class MainForm : Form
     public NetMQ.NetMQSocket subscriber;
     public System.Threading.Thread zmqThread;
     private NetMQ.Sockets.PublisherSocket pubSocket;
-    private Label lblTemperature;
-    private Label lblPumpSpeed;
-    private Label lblValvePosition;
+    public Label lblTemperature;
+    public Label lblPumpSpeed;
+    public Label lblValvePosition;
     private Panel pnlTempStatus;
     private Panel pnlPumpStatus;
     private Panel pnlValveStatus;
@@ -23,18 +23,21 @@ public class MainForm : Form
     private Button btnValveOn;
     private Button btnValveOff;
     private GroupBox grpControllerState;
-    private Label lblControllerState;
+    public Label lblControllerState;
 
-    public MainForm()
+    public MainForm(bool enableSockets = true)
     {
-        // Start ZeroMQ subscriber in a background thread
-        zmqThread = new System.Threading.Thread(StartZmqSubscriber);
-        zmqThread.IsBackground = true;
-        zmqThread.Start();
+        if (enableSockets)
+        {
+            // Start ZeroMQ subscriber in a background thread
+            zmqThread = new System.Threading.Thread(StartZmqSubscriber);
+            zmqThread.IsBackground = true;
+            zmqThread.Start();
 
-        // Create publisher socket for sending commands
-        pubSocket = new NetMQ.Sockets.PublisherSocket();
-        pubSocket.Bind("tcp://127.0.0.1:5557");
+            // Create publisher socket for sending commands
+            pubSocket = new NetMQ.Sockets.PublisherSocket();
+            pubSocket.Bind("tcp://127.0.0.1:5557");
+        }
 
         this.Text = "System Status";
         this.Size = new Size(650, 400);
@@ -123,7 +126,7 @@ public class MainForm : Form
             }
         }
     }
-    private void UpdatePumpSpeed(string speed)
+    public void UpdatePumpSpeed(string speed)
     {
         if (lblPumpSpeed.InvokeRequired)
         {
@@ -135,7 +138,7 @@ public class MainForm : Form
         }
     }
 
-    private void UpdateTemperature(string temp)
+    public void UpdateTemperature(string temp)
     {
         if (lblTemperature.InvokeRequired)
         {
@@ -147,7 +150,7 @@ public class MainForm : Form
         }
     }
 
-    private void UpdateValvePosition(string position)
+    public void UpdateValvePosition(string position)
     {
         if (lblValvePosition.InvokeRequired)
         {
@@ -159,7 +162,7 @@ public class MainForm : Form
         }
     }
 
-    private void UpdateControllerState(string state)
+    public void UpdateControllerState(string state)
     {
         if (lblControllerState.InvokeRequired)
         {
