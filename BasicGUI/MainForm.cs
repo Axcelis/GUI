@@ -100,6 +100,9 @@ public class MainForm : Form
             subSocket.Subscribe("valve_position");
             subSocket.Subscribe("controller_state");
             NetMQMessage msg = null;
+
+
+            
             while (true)
             {
                 if (subSocket.TryReceiveMultipartMessage(TimeSpan.FromMilliseconds(100), ref msg) && msg != null && msg.FrameCount >= 2)
