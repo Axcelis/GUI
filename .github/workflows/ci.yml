@@ -69,3 +69,11 @@ jobs:
           asset_path: ./release/BasicGUI.zip
           asset_name: BasicGUI.zip
           asset_content_type: application/zip
+      - name: Trigger Integration pipeline
+        if: success() # Only runs if previous steps succeeded
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.INTEGRATION_REPO_TOKEN }}
+          repository: Axcelis/Integration
+          event-type: upstream-ci-passed
+          client-payload: '{"source":"controller"}' # or "gui" in GUI repo
