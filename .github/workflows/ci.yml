@@ -73,7 +73,7 @@ jobs:
         if: success() # Only runs if previous steps succeeded
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.INTEGRATION_REPO_TOKEN }}
+          token: ${{ secrets.RYAN_TOKEN }}
           repository: Axcelis/Integration
           event-type: upstream-ci-passed
-          client-payload: '{"source":"controller"}' # or "gui" in GUI repo
+          client-payload: '{"source":"gui"}' # or "gui" in GUI repo
